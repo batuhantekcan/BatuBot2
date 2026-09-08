@@ -53,7 +53,10 @@ const client = new tmi.Client({
 client.connect()
   .then(() => {
     console.log("✅ BatuBot2 ist mit Twitch verbunden!");
-  })
+  setInterval(() => {
+  client.say("#batu68t", "📱🔥 Folgt Batu auf TikTok: @batu68t");
+  client.say("#batu68t", "📸🔥 Folgt Batu auch auf Instagram: @batu.t68");
+}, 15 * 60 * 1000);})
   .catch((err) => {
     console.log("❌ Verbindung fehlgeschlagen:");
     console.log(err);
