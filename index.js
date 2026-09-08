@@ -72,13 +72,13 @@ client.on("message", (channel, tags, message, self) => {
 
   if (command === "!socials") {
     client.say(channel,
-      "🔥 Batu's Socials | TikTok: @clutchbybatu | Instagram: @batu.t68"
+      "🔥 Batu's Socials | TikTok: @batu68t | Instagram: @batu.t68"
     );
   }
 
   if (command === "!tiktok") {
     client.say(channel,
-      "🎮 TikTok von Batu: @clutchbybatu 🔥 Folgt gerne für Warzone Clips!"
+      "🎮 TikTok von Batu: @batu68t 🔥 Folgt gerne für Warzone Clips!"
     );
   }
 
