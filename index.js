@@ -38,7 +38,7 @@ if (!token) {
 if (!token.startsWith("oauth:")) {
   token = "oauth:" + token;
 }
-checkToken(token);
+checkToken(token.replace(/^oauth:/, ""));
 const client = new tmi.Client({
   options: {
     debug: true
