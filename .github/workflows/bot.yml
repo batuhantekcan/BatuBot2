@@ -1,0 +1,29 @@
+name: BatuBot2
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */5 * * *"
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Code holen
+        uses: actions/checkout@v4
+
+      - name: Node.js installieren
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Abhängigkeiten installieren
+        run: npm install
+
+      - name: BatuBot2 starten
+        run: npm start
+        env:
+          BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
+          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
