@@ -27,7 +27,7 @@ function checkToken(token) {
   });
 }
 
-const username = process.env.BOT_USERNAME;
+const username = "batubot1";
 let token = process.env.OAUTH_TOKEN;
 
 if (!token) {
