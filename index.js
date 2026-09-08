@@ -1,4 +1,31 @@
 const tmi = require("tmi.js");
+const https = require("https");
+
+function checkToken(token) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      "https://id.twitch.tv/oauth2/validate",
+      {
+        method: "GET",
+        headers: {
+          Authorization: "OAuth " + token
+        }
+      },
+      res => {
+        let data = "";
+
+        res.on("data", chunk => data += chunk);
+        res.on("end", () => {
+          console.log("🔎 Twitch Token Check:", data);
+          resolve();
+        });
+      }
+    );
+
+    req.on("error", reject);
+    req.end();
+  });
+}
 
 const username = process.env.BOT_USERNAME;
 let token = process.env.OAUTH_TOKEN;
