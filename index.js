@@ -1,4 +1,5 @@
 const tmi = require("tmi.js");
+const WebSocket = require("ws");
 const https = require("https");
 
 function checkToken(token) {
