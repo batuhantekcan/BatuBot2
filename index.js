@@ -50,6 +50,78 @@ const client = new tmi.Client({
   },
   channels: ["batu68t"]
 });
+const CLIENT_ID = "xtdrb2mfd389gai62ylb6f49xrrwzh";
+const CHANNEL = "batu68t";
+
+async function getUserId(login) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?login=${login}`,
+    {
+      headers: {
+        "Client-ID": CLIENT_ID,
+        "Authorization": "Bearer " + token.replace(/^oauth:/, "")
+      }
+    }
+  );
+
+  const data = await response.json();
+  return data.data[0].id;
+}
+
+async function startFollowAlerts() {
+  const ws = new WebSocket("wss://eventsub.wss.twitch.tv/ws");
+
+  ws.on("message", async raw => {
+    const message = JSON.parse(raw.toString());
+
+    if (message.metadata.message_type === "session_welcome") {
+      const sessionId = message.payload.session.id;
+
+      const broadcasterId = await getUserId(CHANNEL);
+      const moderatorId = await getUserId("batubot1");
+
+      await fetch("https://api.twitch.tv/helix/eventsub/subscriptions", {
+        method: "POST",
+        headers: {
+          "Client-ID": CLIENT_ID,
+          "Authorization": "Bearer " + token.replace(/^oauth:/, ""),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          type: "channel.follow",
+          version: "2",
+          condition: {
+            broadcaster_user_id: broadcasterId,
+            moderator_user_id: moderatorId
+          },
+          transport: {
+            method: "websocket",
+            session_id: sessionId
+          }
+        })
+      });
+
+      console.log("❤️ Follow-Alert aktiviert!");
+    }
+
+    if (message.metadata.message_type === "notification") {
+      if (message.metadata.subscription_type === "channel.follow") {
+        const event = message.payload.event;
+
+        client.say(
+          CHANNEL,
+          `❤️ Danke für den Follow, @${event.user_login}! Willkommen bei batu68t! 🔥🎮`
+        );
+      }
+    }
+  });
+
+  ws.on("error", error => {
+    console.log("❌ EventSub Fehler:", error);
+  });
+}
+
+startFollowAlerts();
 
 client.connect()
   .then(() => {
